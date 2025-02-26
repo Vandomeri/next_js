@@ -15,7 +15,42 @@ datasource db {
 
 model users {
   id       Int    @id @default(autoincrement())
-  username String
-  email    String
+  fio      String
+  email    String @unique
+  phone    String @unique
   password String
+  role     String @default("user")
+  ads      ads[]
+}
+
+model ads {
+  id           Int          @id @default(autoincrement())
+  name         String
+  price        Int
+  description  String
+  cat          String
+  categories   categories?  @relation(fields: [categoriesId], references: [id])
+  categoriesId Int?
+  users        users?       @relation(fields: [usersId], references: [id])
+  usersId      Int?
+  images       ads_images[]
+
+  lat  String
+  long String
+
+  isVerified  Boolean @default(false)
+  isPublished Boolean @default(true)
+}
+
+model categories {
+  id   Int    @id @default(autoincrement())
+  name String
+  ad   ads[]
+}
+
+model ads_images {
+  id Int @id @default(autoincrement())
+
+  ads   ads? @relation(fields: [adsId], references: [id])
+  adsId Int?
 }
